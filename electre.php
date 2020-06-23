@@ -20,8 +20,8 @@ Authorization scopes : webapi
 */
 
 // remplacer les valeurs par celles fournies par Electre
-$key = 'demo_enrichissements_electre_webapi';
-$secret = 'DDF000F6-C0CD-4B32-BC12-CB88672CA5FA';
+$key = 'cle_demo_enrichissements_electre';
+$secret = 'cle-secrete';
 
 $ean = $_GET['ean'];
 
