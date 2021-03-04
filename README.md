@@ -9,3 +9,4 @@ C’est le chemin vers ce script qui est renseigné dans la configuration d’Al
 Pensez à mettre à jour les valeurs de $key et $secret aux lignes 23 et 24 du fichier electre.php avec les identifiants fournis par Electre pour l’utilisation de leur API.
 Et pour que ça marche il faut que le fichier soit hébergé sur un serveur web accessible sur internet et en https.
 
+Pré requis: activer les sessions php, et la libraire curl pour php.
