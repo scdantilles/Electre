@@ -1,34 +1,12 @@
 <?php
-
-// Définit le contenu de l'en-tête - dans ce cas, image/jpeg, nécessaire pour alma
 header('Content-Type: image/jpeg');
-
 session_start();
-
-/*
-Ci-dessous les informations pour connexion à l’API TEST.
-
-Point d’entrée : https://electre3test-api.bvdep.com/v1.0
-
-Access token URI : https://electre3test-idp.bvdep.com/connect/token
-
-Authorization URI : https://electre3test-idp.bvdep.com/connect/authorize
-
-Authorization grants : client_credentials
-
-Authorization scopes : webapi
-*/
-
-// remplacer les valeurs par celles fournies par Electre
-$key = 'cle_demo_enrichissements_electre';
-$secret = 'cle-secrete';
 
 $ean = $_GET['ean'];
 
 $ean = isbn2ean($ean);
 
-function isbn2ean($x)
-{
+function isbn2ean($x){
   $x = str_replace("-","",$x);
   $x = str_replace(" ","",$x);
   if(strlen($x) < 10) $x = $x."X";
@@ -55,18 +33,19 @@ function isbn2ean($x)
   return $x;
 }
 
-
-function get_access_token($key, $secret){
+function get_access_token(){
   
   //The url you wish to send the POST request to
-  $url = "https://electre3test-idp.bvdep.com/connect/token";
+  $url = "https://login.electre-ng-horsprod.com/auth/realms/electre/protocol/openid-connect/token";
 
   //The data you want to send via POST
   $fields = [
-      'grant_type'      => 'client_credentials',
-      'scope'           => 'webapi',
-      'client_id'       => $key,
-      'client_secret'   => $secret
+      'grant_type'      => 'password',
+      'scope'           => 'roles',
+      'username'        => 'username-de-l-institution',
+      'password'        => 'lepassword',
+      'client_id'       => 'api-client',
+      'client_secret'   => ''
   ];
 
   //url-ify the data for the POST
@@ -88,6 +67,8 @@ function get_access_token($key, $secret){
   $info = curl_getinfo($ch);
 
   //echo $result;
+  
+  //echo $info;
 
   curl_close($ch);
 
@@ -100,37 +81,33 @@ function get_access_token($key, $secret){
   else
     
     return NULL;
-  
 }
 
 if(!isset($_SESSION['time'])){
-  
   $_SESSION['time'] = time();
-    
 }
 
-
 $diff = time() - $_SESSION['time'];
-
 
 if(isset($_SESSION['access_token'])){
   
   if($diff > 3500){      
   
-    $_SESSION['access_token'] = get_access_token($key, $secret);  
+    $_SESSION['access_token'] = get_access_token();  
     $_SESSION['time'] = time();
   }
   
 }else
     
-    $_SESSION['access_token'] = get_access_token($key, $secret); 
+    $_SESSION['access_token'] = get_access_token(); 
     
 $access_token = $_SESSION['access_token'];
 
-// Complétez $url avec l'url cible (l'url de la page que vous voulez télécharger)
-$url="https://electre3test-api.bvdep.com/v1.0/eans/".$ean."/cover?access_token=".$access_token; 
 
-$headers[] = 'authorization:Bearer';
+// Complétez $url avec l'url cible (l'url de la page que vous voulez télécharger)
+$url="https://api.demo.electre-ng-horsprod.com/notices/ean/".$ean; 
+
+$headers[] = 'authorization:Bearer '.$access_token.'';
  
 // Tableau contenant les options de téléchargement
 $options=array(
@@ -139,7 +116,7 @@ $options=array(
       CURLOPT_HEADER         => false, // Ne pas inclure l'entête de réponse du serveur dans la chaine retournée
       CURLOPT_HTTPHEADER     => $headers
 );
- 
+
 // Création d'un nouvelle ressource cURL
 $CURL=curl_init();
  
@@ -147,12 +124,17 @@ $CURL=curl_init();
 curl_setopt_array($CURL,$options);
 
 // Exécution de la requête
-$content=curl_exec($CURL);      // Le contenu téléchargé est enregistré dans la variable $content.
+$content=curl_exec($CURL);      
 $info = curl_getinfo($CURL);
 
+//Traitement des données
+$data = json_decode($content, true);
 
-echo $content;
- 
+$path = $data['notices'][0]['imagetteCouverture'];
+
+$img = file_get_contents($path);
+
+echo $img;
 
 // Fermeture de la session cURL
 curl_close($CURL);
