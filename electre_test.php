@@ -65,11 +65,11 @@ function get_access_token(){
   $result = curl_exec($ch);
   $info = curl_getinfo($ch);
 
-  echo "result get token : ".$result;
+  echo "result get token : ".print_r($result);
   
   echo "<hr />";
   
-  echo "info get token : ".$info;
+  echo "info get token : ".print_r($info);
 
   curl_close($ch);
 
@@ -130,11 +130,11 @@ $info = curl_getinfo($CURL);
 
 echo "<hr />";
 
-echo "content : ".$content;
+echo "content : ".print_r($content);
   
 echo "<hr />";
 
-echo "info : ".$info;
+echo "info : ".print_r($info);
 
 
 //Traitement des données
