@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$ean = $_GET['ean'];
+$ean = '9782253087434';
 
 $ean = isbn2ean($ean);
 
