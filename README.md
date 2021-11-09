@@ -10,3 +10,5 @@ Pensez à mettre à jour les valeurs entre '' des lignes 45 et 46 du fichier ele
 Et pour que ça marche il faut que le fichier soit hébergé sur un serveur web accessible sur internet et en https.
 
 Pré requis: activer les sessions php, et la libraire curl pour php.
+
+ps : le fichier electre_test.php est là pour vérifier que la connexion à l'API et la récupération des infos se fait, il faut aussi le mettre à jour avec les identifiants  d'utilisation de l'API aux lignes 44 et 45. 
