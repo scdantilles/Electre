@@ -11,4 +11,6 @@ Et pour que ça marche il faut que le fichier soit hébergé sur un serveur web 
 
 Pré requis: activer les sessions php, et la libraire curl pour php.
 
+Pour ceux qui passeraient par un proxy, il faut récupérer le fichier electre_proxy.php et mettre à jour les informations aux lignes 6, 48 et 49.
+
 ps : le fichier electre_test.php est là pour vérifier que la connexion à l'API et la récupération des infos se font, il faut aussi le mettre à jour avec les identifiants  d'utilisation de l'API aux lignes 44 et 45, ne pas le configurer dans alma, mais directement y accéder depuis le navigateur. (même prérequis, sessions et librairie curl pour php)
