@@ -146,25 +146,22 @@ $data = json_decode($content, true);
 
 $path = $data['notices'][0]['imagetteCouverture'];
 
-$headers[] = 'authorization:Bearer '.$access_token.'';
- 
-// Tableau contenant les options de téléchargement
-$options=array(
-      CURLOPT_URL            => $path, // Url cible (l'url la page que vous voulez télécharger)
-      CURLOPT_RETURNTRANSFER => true, // Retourner le contenu téléchargé dans une chaine (au lieu de l'afficher directement)
-      CURLOPT_HEADER         => false, // Ne pas inclure l'entête de réponse du serveur dans la chaine retournée
-      CURLOPT_HTTPHEADER     => $headers
-);
+$aContext = [
+  'https' => [
+	'proxy' => $proxy,
+	'request_fulluri' => true,
+  ],
+];
 
-$process = curl_init(); 
-curl_setopt_array($process,$options);
+$cxContext = stream_context_create($aContext);
 
-$content=curl_exec($process);      
-$info = curl_getinfo($process);
+$img = file_get_contents($path, False, $cxContext);
+
+//$img = file_get_contents($path);
 
 echo "<hr />";
 
-$imgData = base64_encode($content);
+$imgData = base64_encode($img);
 
 // Format the image SRC:  data:{mime};base64,{data};
 $src = 'data: image/jpeg;base64,'.$imgData;
@@ -174,11 +171,9 @@ echo '<img src="'.$src.'" alt="couverture du livre">';
   
 echo "<hr />";
 
-echo "info2 : ".print_r($info);
 
 // Fermeture de la session cURL
 curl_close($CURL);
-curl_close($process);
 
 
 ?>
