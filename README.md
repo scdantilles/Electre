@@ -9,7 +9,7 @@ C’est le chemin vers ce script qui est renseigné dans la configuration d’Al
 Pensez à mettre à jour les valeurs entre '' des lignes 45 et 46 du fichier electre.php avec les éléments fournis par Electre pour l’utilisation de leur API.
 Et pour que ça marche il faut que le fichier soit hébergé sur un serveur web accessible sur internet et en https.
 
-Pré requis: activer les sessions php, et la libraire curl pour php.
+Pré requis: activer les sessions php, la libraire curl pour php et php7 au moins.
 
 Pour ceux qui passeraient par un proxy, il faut récupérer le fichier electre_proxy.php et mettre à jour les informations aux lignes 6, 48 et 49.
 
