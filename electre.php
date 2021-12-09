@@ -36,7 +36,7 @@ function isbn2ean($x){
 function get_access_token(){
   
   //The url you wish to send the POST request to
-  $url = "https://login.electre-ng-horsprod.com/auth/realms/electre/protocol/openid-connect/token";
+  $url = "https://login.electre-ng.com/auth/realms/electre/protocol/openid-connect/token";
 
   //The data you want to send via POST
   $fields = [
@@ -105,7 +105,7 @@ $access_token = $_SESSION['access_token'];
 
 
 // Complétez $url avec l'url cible (l'url de la page que vous voulez télécharger)
-$url="https://api.demo.electre-ng-horsprod.com/notices/ean/".$ean; 
+$url="https://api.electre-ng.com/notices/ean/".$ean; 
 
 $headers[] = 'authorization:Bearer '.$access_token.'';
  
