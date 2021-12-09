@@ -3,7 +3,7 @@ header('Content-Type: image/jpeg');
 session_start();
 
 //mettre à jour les infos du proxy
-$proxy = "proxy:port";
+$proxy = "proxy";
 
 $ean = $_GET['ean'];
 
@@ -39,14 +39,14 @@ function isbn2ean($x){
 function get_access_token($proxy){
   
   //The url you wish to send the POST request to
-  $url = "https://login.electre-ng-horsprod.com/auth/realms/electre/protocol/openid-connect/token";
+  $url = "https://login.electre-ng.com/auth/realms/electre/protocol/openid-connect/token";
 
   //The data you want to send via POST
   $fields = [
       'grant_type'      => 'password',
       'scope'           => 'roles',
-      'username'        => 'username-de-l-institution',
-      'password'        => 'lepassword',
+      'username'        => 'username',
+      'password'        => 'passwd',
       'client_id'       => 'api-client',
       'client_secret'   => ''
   ];
@@ -69,10 +69,6 @@ function get_access_token($proxy){
   //execute post
   $result = curl_exec($ch);
   $info = curl_getinfo($ch);
-
-  //echo $result;
-  
-  //echo $info;
 
   curl_close($ch);
 
@@ -108,8 +104,7 @@ if(isset($_SESSION['access_token'])){
 $access_token = $_SESSION['access_token'];
 
 
-// Complétez $url avec l'url cible (l'url de la page que vous voulez télécharger)
-$url="https://api.demo.electre-ng-horsprod.com/notices/ean/".$ean; 
+$url="https://api.electre-ng.com/notices/ean/".$ean; 
 
 $headers[] = 'authorization:Bearer '.$access_token.'';
  
@@ -137,29 +132,16 @@ $data = json_decode($content, true);
 
 $path = $data['notices'][0]['imagetteCouverture'];
 
-$headers[] = 'authorization:Bearer '.$access_token.'';
- 
-// Tableau contenant les options de téléchargement
-$options=array(
-      CURLOPT_URL            => $path, // Url cible (l'url la page que vous voulez télécharger)
-      CURLOPT_RETURNTRANSFER => true, // Retourner le contenu téléchargé dans une chaine (au lieu de l'afficher directement)
-      CURLOPT_HEADER         => false, // Ne pas inclure l'entête de réponse du serveur dans la chaine retournée
-      CURLOPT_HTTPHEADER     => $headers
-);
+$context_array = array('http'=>array('proxy'=>$proxy,'request_fulluri'=>false));
+$context = stream_context_create($context_array);
 
-$process = curl_init(); 
-curl_setopt_array($process,$options);
+// Use context stream with file_get_contents
+$img = file_get_contents($path, false, $context);
 
-$content=curl_exec($process);      
-
-// Affichage de l'image
-echo $content;
-  
+echo $img;
 
 // Fermeture de la session cURL
 curl_close($CURL);
-curl_close($process);
-
 
 
 ?>
