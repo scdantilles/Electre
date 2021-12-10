@@ -1,9 +1,10 @@
 <?php
+
 header('Content-Type: image/jpeg');
 session_start();
 
 //mettre à jour les infos du proxy
-$proxy = "proxy";
+$proxy = "proxy:port";
 
 $ean = $_GET['ean'];
 
@@ -45,8 +46,8 @@ function get_access_token($proxy){
   $fields = [
       'grant_type'      => 'password',
       'scope'           => 'roles',
-      'username'        => 'username',
-      'password'        => 'passwd',
+      'username'        => 'api-institution',
+      'password'        => 'passwordinstitution',
       'client_id'       => 'api-client',
       'client_secret'   => ''
   ];
@@ -62,6 +63,7 @@ function get_access_token($proxy){
   curl_setopt($ch,CURLOPT_PROXY, $proxy);
   curl_setopt($ch,CURLOPT_POST, count($fields));
   curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
+
 
   //So that curl_exec returns the contents of the cURL; rather than echoing it
   curl_setopt($ch,CURLOPT_RETURNTRANSFER, true); 
@@ -123,13 +125,13 @@ curl_setopt($CURL, CURLOPT_PROXY, $proxy);
 // Configuration des options de téléchargement
 curl_setopt_array($CURL,$options);
 
+
 // Exécution de la requête
 $content=curl_exec($CURL);      
 $info = curl_getinfo($CURL);
 
 //Traitement des données
 $data = json_decode($content, true);
-
 $path = $data['notices'][0]['imagetteCouverture'];
 
 $context_array = array('http'=>array('proxy'=>$proxy,'request_fulluri'=>false));
