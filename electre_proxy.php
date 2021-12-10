@@ -1,5 +1,4 @@
 <?php
-
 header('Content-Type: image/jpeg');
 session_start();
 
