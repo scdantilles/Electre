@@ -38,7 +38,7 @@ function isbn2ean($x){
 function get_access_token($proxy){
   
   //The url you wish to send the POST request to
-  $url = "https://login.electre-ng-horsprod.com/auth/realms/electre/protocol/openid-connect/token";
+  $url = "https://login.electre-ng.com/auth/realms/electre/protocol/openid-connect/token";
 
   //The data you want to send via POST
   $fields = [
@@ -110,7 +110,7 @@ $access_token = $_SESSION['access_token'];
 
 
 // Complétez $url avec l'url cible (l'url de la page que vous voulez télécharger)
-$url="https://api.demo.electre-ng-horsprod.com/notices/ean/".$ean; 
+$url="https://api.electre-ng.com/notices/ean/".$ean; 
 
 $headers[] = 'authorization:Bearer '.$access_token.'';
  
@@ -143,28 +143,16 @@ echo "info : ".print_r($info);
 
 //Traitement des données
 $data = json_decode($content, true);
-
 $path = $data['notices'][0]['imagetteCouverture'];
 
-$aContext = [
-  'https' => [
-	'proxy' => $proxy,
-	'request_fulluri' => true,
-  ],
-];
+$context_array = array('http'=>array('proxy'=>$proxy,'request_fulluri'=>false));
+$context = stream_context_create($context_array);
 
-$cxContext = stream_context_create($aContext);
-
-$img = file_get_contents($path, False, $cxContext);
-
-//$img = file_get_contents($path);
-
-echo "<hr />";
-
-$imgData = base64_encode($img);
+// Use context stream with file_get_contents
+$img = file_get_contents($path, false, $context);
 
 // Format the image SRC:  data:{mime};base64,{data};
-$src = 'data: image/jpeg;base64,'.$imgData;
+$src = 'data: image/jpeg;base64,'.$img;
 
 // Affichage
 echo '<img src="'.$src.'" alt="couverture du livre">';
